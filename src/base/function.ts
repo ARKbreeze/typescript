@@ -62,6 +62,8 @@ op('s', 12);
 //  一个简单的 输入什么返回什么函数
 // 大致懂了这个重载了
 
+//这个重载是从上往下进行匹配的 一旦中途匹配到就是这个实现,所以类型要限制好
+// 一旦你想执行的在后面 而被截胡了,那可能就会报错
 function ReloadFunc(pram: string): string;
 function ReloadFunc(pram: number): number;
 function ReloadFunc(pram: string | number): number | string {
@@ -69,5 +71,15 @@ function ReloadFunc(pram: string | number): number | string {
 }
 
 ReloadFunc(123);
+ReloadFunc('string');
 
+// 生成器函数 异步生成器函数 异步函数 类型签名
+// 1. 生成器函数   其实是生成器和迭代器和promise 实现了async await  了解即可
+function* genFunc(): Iterable<void> {} //空生成器了属于是=
+// 2. 异步生成器函数
+async function* asyncGenFunc(): AsyncIterable<void> {} //
+// 3. 异步函数类型
+async function asyncFunc(): Promise<void> {}
+
+// 现在因为泛型  所以先不深入
 export {};
