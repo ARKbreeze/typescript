@@ -70,3 +70,5 @@ function strOrNum(params: string | number) {
 //  就会推导为 never[]
 const arr = [];
 arr.push('1');
+
+export {};
