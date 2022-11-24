@@ -193,4 +193,94 @@
   swap([{ name: 'breeze' }, {}]); // [ {} , { name : string } ] => [ { name : string} : {} ]
 }
 
+{
+  //函数依然有约束
+  // 比如 不想处理对象了 只处理数字跟字符串
+  function handle<T extends string | number>(input: T): T {
+    return input;
+  }
+
+  // 只处理数字元祖 不过这🌰有点扯
+  function swap<T extends number, U extends number>([start, end]: [T, U]): [U, T] {
+    return [end, start];
+  }
+
+  // lodash pick函数 接受一个对象  在接受一个对象属性名组成的数组 从这个对象截取属性
+
+  function pick<T extends object, U extends keyof T>(obj: T, ...props: Array<U>): Pick<T, U> {
+    return obj;
+  }
+
+  const handle1 = <T>(input: T): T => input;
+  const handle2 = <T extends unknown>(input: T): T => input;
+  // const handle3 = <T ,>(input: T): T => input; // jsx中为了分辨可以加逗号 或者加继承方便编译器分辨
+}
+
+{
+  // class
+
+  class Queue<TElementType> {
+    private _list: TElementType[];
+    constructor(initial: TElementType[]) {
+      this._list = initial;
+    }
+
+    // 入队
+    enqueue<TType extends TElementType>(ele: TType): TElementType[] {
+      this._list.push(ele);
+      return this._list;
+    }
+
+    // 出队
+    dequeue(): TElementType[] {
+      this._list.unshift();
+      return this._list;
+    }
+  }
+}
+
+{
+  // 内置方法
+
+  function foo(): Promise<boolean> {
+    return new Promise<boolean>((res, rej) => {
+      res(true);
+    });
+  }
+  // 你只需要声明promise res跟rej自动就会推导至对应类型
+
+  interface PromiseConstructor {
+    resolve<T>(value: T | PromiseLike<T>): Promise<T>;
+  }
+
+  // string[] . Array<string> 介奏似泛型
+
+  const arr: Array<number> = [1, 2, 3];
+  const arr1: number[] = [1, 2, 3];
+  arr.push(1);
+  arr.find(() => false); // return number | udf
+
+  arr.reduce((prev, curr, idx, arr) => {
+    return prev + curr;
+  }, 0);
+  arr.reduce((prev, curr, idx, arr) => {
+    return prev + curr;
+  });
+
+  // 推导不出来的时候 就给它个泛型就行 空数组里面没有值 它推导不出来就给了never[] . 有一个初始元素 比如 [1] . 那就是 number[]
+  arr.reduce<number[]>((prev, curr, idx, arr) => {
+    return [...prev, curr];
+  }, []);
+}
+
+{
+  // react
+  // const [state, setState] = useState<number[]>([]);
+  // 不传入默认值，则类型为 number[] | undefined
+  // const [state, setState] = useState<number[]>();
+  // 体现在 ref.current 上
+  // const ref = useRef<number>();
+  // const context = createContext<ContextType>({});
+}
+
 export {};
